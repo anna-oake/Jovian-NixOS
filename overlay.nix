@@ -4,7 +4,7 @@ let
   inherit (final)
     kernelPatches
     linuxPackagesFor
-  ;
+    ;
 in
 rec {
   linux-firmware-jupiter = final.callPackage ./pkgs/linux-firmware {
@@ -43,10 +43,10 @@ rec {
     mangohud' = prev.mangohud;
   };
 
-  mesa-radeonsi-jupiter = final.callPackage ./pkgs/mesa-radeonsi-jupiter {};
-  mesa-radv-jupiter = final.callPackage ./pkgs/mesa-radv-jupiter {};
+  mesa-radeonsi-jupiter = final.callPackage ./pkgs/mesa-radeonsi-jupiter { };
+  mesa-radv-jupiter = final.callPackage ./pkgs/mesa-radv-jupiter { };
 
-  noisetorch-ladspa = final.callPackage ./pkgs/noisetorch-ladspa {};
+  noisetorch-ladspa = final.callPackage ./pkgs/noisetorch-ladspa { };
 
   jupiter-fan-control = final.callPackage ./pkgs/jupiter-fan-control { };
   powerbuttond = final.callPackage ./pkgs/powerbuttond { };
@@ -74,21 +74,24 @@ rec {
 
   jovian-documentation = final.callPackage ./support/docs {
     documentationPath = final.callPackage (
-      { runCommand
+      {
+        runCommand,
       }:
-      runCommand "jovian-documentation-source" {
-        src = ./docs;
-      } ''
-        (PS4=" $ "; set -x
-        cp --no-preserve=mode -r $src src
-        chmod -R +w src
-        rm -vf src/README.md
-        cp -v ${./CONTRIBUTING.md} src/contributing.md
-        printf '# Home\n\n' | cat - ${./README.md} > src/index.md
-        cp -v ${./support/docs/search.md} src/search.md
-        mv src $out
-        )
-      ''
+      runCommand "jovian-documentation-source"
+        {
+          src = ./docs;
+        }
+        ''
+          (PS4=" $ "; set -x
+          cp --no-preserve=mode -r $src src
+          chmod -R +w src
+          rm -vf src/README.md
+          cp -v ${./CONTRIBUTING.md} src/contributing.md
+          printf '# Home\n\n' | cat - ${./README.md} > src/index.md
+          cp -v ${./support/docs/search.md} src/search.md
+          mv src $out
+          )
+        ''
     ) { };
   };
 

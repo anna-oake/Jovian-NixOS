@@ -1,16 +1,17 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, boost
-, lv2
-, faust2lv2
-, noisetorch-ladspa
-, which
-, resholve
-, bash
-, coreutils
-, dmidecode
-, gnused
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  boost,
+  lv2,
+  faust2lv2,
+  noisetorch-ladspa,
+  which,
+  resholve,
+  bash,
+  coreutils,
+  dmidecode,
+  gnused,
 }:
 
 let
@@ -39,7 +40,7 @@ let
       gnused
     ];
   };
-  self = stdenv.mkDerivation(finalAttrs: {
+  self = stdenv.mkDerivation (finalAttrs: {
     pname = "steamdeck-dsp";
     version = "0.83";
 
@@ -113,4 +114,5 @@ let
       license = lib.licenses.gpl3;
     };
   });
-in self
+in
+self

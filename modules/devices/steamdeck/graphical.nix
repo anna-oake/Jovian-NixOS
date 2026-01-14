@@ -1,10 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
     mkIf
     mkMerge
-  ;
+    ;
   cfg = config.jovian.devices.steamdeck;
 in
 {

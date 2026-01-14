@@ -1,20 +1,27 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
     mkDefault
     mkIf
     mkMerge
-  ;
+    ;
 
   cfg = config.jovian.steam;
 in
 {
   config = mkIf cfg.enable (mkMerge [
     {
-      warnings = []
-        ++ lib.optional (!config.networking.networkmanager.enable)
-          "The Steam Deck UI integrates with NetworkManager (networking.networkmanager.enable) which is not enabled. NetworkManager is required to complete the first-time setup process.";
+      warnings =
+        [ ]
+        ++
+          lib.optional (!config.networking.networkmanager.enable)
+            "The Steam Deck UI integrates with NetworkManager (networking.networkmanager.enable) which is not enabled. NetworkManager is required to complete the first-time setup process.";
     }
     {
       security.wrappers.gamescope = {
@@ -51,9 +58,18 @@ in
       services.pulseaudio.support32Bit = true;
       hardware.steam-hardware.enable = mkDefault true;
 
-      environment.systemPackages = [ pkgs.gamescope pkgs.gamescope-session pkgs.steamos-polkit-helpers pkgs.steamos-manager ];
+      environment.systemPackages = [
+        pkgs.gamescope
+        pkgs.gamescope-session
+        pkgs.steamos-polkit-helpers
+        pkgs.steamos-manager
+      ];
 
-      systemd.packages = [ pkgs.gamescope-session pkgs.powerbuttond pkgs.steamos-manager ];
+      systemd.packages = [
+        pkgs.gamescope-session
+        pkgs.powerbuttond
+        pkgs.steamos-manager
+      ];
 
       # Required by steamos-manager
       services.inputplumber.enable = true;
@@ -61,7 +77,7 @@ in
         enable = lib.mkDefault true;
         scheduler = "scx_lavd";
       };
-      systemd.services.scx.wantedBy = lib.mkForce [];
+      systemd.services.scx.wantedBy = lib.mkForce [ ];
       services.orca.enable = lib.mkDefault true;
 
       # https://github.com/Jovian-Experiments/steamos-manager/blob/5fecc6bbb47719a65d0b10aacbd0ffe873fb1e43/data/user/orca.service#L9
@@ -69,8 +85,8 @@ in
 
       # Vendor patch: https://raw.githubusercontent.com/Jovian-Experiments/PKGBUILDs-mirror/cdaeca26642d59fc9109e98ac9ce2efe5261df1b/0001-Add-systemd-service.patch
       systemd.user.services.wakehook = {
-        wantedBy = ["gamescope-session.service"];
-        after = ["gamescope-session.service"];
+        wantedBy = [ "gamescope-session.service" ];
+        after = [ "gamescope-session.service" ];
         serviceConfig = {
           ExecStart = lib.getExe pkgs.wakehook;
           Restart = "always";

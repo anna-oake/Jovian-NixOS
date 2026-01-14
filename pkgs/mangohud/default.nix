@@ -1,5 +1,5 @@
 { mangohud', fetchFromGitHub }:
-mangohud'.overrideAttrs(old: {
+mangohud'.overrideAttrs (old: {
   version = "0.8.2.rc1.r5";
 
   src = fetchFromGitHub {

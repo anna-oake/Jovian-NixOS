@@ -1,18 +1,22 @@
-{ pkgs ? import ./nixpkgs.nix {} }:
+{
+  pkgs ? import ./nixpkgs.nix { },
+}:
 
 let
   nixpkgsPath = pkgs.path;
   fromPkgs = path: pkgs.path + "/${path}";
   evalConfig = import (fromPkgs "nixos/lib/eval-config.nix");
-  buildConfig = { configuration ? {} }:
+  buildConfig =
+    {
+      configuration ? { },
+    }:
     evalConfig {
       specialArgs = { inherit nixpkgsPath; };
-      modules= [
+      modules = [
         ./modules
         configuration
       ];
-    }
-  ;
+    };
   eval = buildConfig { };
 in
 {

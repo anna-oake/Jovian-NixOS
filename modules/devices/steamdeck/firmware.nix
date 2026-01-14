@@ -1,6 +1,11 @@
 # BIOS/Firmware updates
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
@@ -8,7 +13,7 @@ let
     mkMerge
     mkOption
     types
-  ;
+    ;
   cfg = config.jovian.devices.steamdeck;
 in
 {
@@ -41,10 +46,10 @@ in
       ];
     })
     (mkIf (cfg.autoUpdate) {
-      systemd.packages = [pkgs.steamdeck-firmware];
+      systemd.packages = [ pkgs.steamdeck-firmware ];
 
-      systemd.services.jupiter-biosupdate.wantedBy = ["multi-user.target"];
-      systemd.services.jupiter-controller-update.wantedBy = ["multi-user.target"];
+      systemd.services.jupiter-biosupdate.wantedBy = [ "multi-user.target" ];
+      systemd.services.jupiter-controller-update.wantedBy = [ "multi-user.target" ];
     })
     (mkIf (cfg.enableFwupdBiosUpdates) {
       services.fwupd.enable = true;

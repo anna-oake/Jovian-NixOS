@@ -1,12 +1,13 @@
-{ lib
-, fetchFromGitHub
-, nodejs
-, pnpm_9
-, fetchPnpmDeps
-, pnpmConfigHook
-, python3
-, coreutils
-, psmisc
+{
+  lib,
+  fetchFromGitHub,
+  nodejs,
+  pnpm_9,
+  fetchPnpmDeps,
+  pnpmConfigHook,
+  python3,
+  coreutils,
+  psmisc,
 }:
 python3.pkgs.buildPythonPackage rec {
   pname = "decky-loader";
@@ -43,7 +44,7 @@ python3.pkgs.buildPythonPackage rec {
     cd ../backend
   '';
 
-  build-system = with python3.pkgs; [ 
+  build-system = with python3.pkgs; [
     poetry-core
     poetry-dynamic-versioning
   ];
@@ -60,7 +61,12 @@ python3.pkgs.buildPythonPackage rec {
   ];
 
   makeWrapperArgs = [
-    "--prefix PATH : ${lib.makeBinPath [ coreutils psmisc ]}"
+    "--prefix PATH : ${
+      lib.makeBinPath [
+        coreutils
+        psmisc
+      ]
+    }"
   ];
 
   pythonRelaxDeps = [

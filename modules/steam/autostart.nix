@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (lib)
@@ -7,7 +12,7 @@ let
     mkMerge
     mkOption
     types
-  ;
+    ;
   cfg = config.jovian.steam;
 in
 {
@@ -32,15 +37,27 @@ in
         };
 
         desktopSession = mkOption {
-          type = with types ; nullOr str // {         
-            check = userProvidedDesktopSession:
-              lib.assertMsg (userProvidedDesktopSession != null -> (str.check userProvidedDesktopSession && lib.elem userProvidedDesktopSession config.services.displayManager.sessionData.sessionNames)) ''
-                  Desktop session '${userProvidedDesktopSession}' not found.
-                  Valid values for 'jovian.steam.desktopSession' are:
-                    ${lib.concatStringsSep "\n  " config.services.displayManager.sessionData.sessionNames}
-                  If you don't want a desktop session to switch to, set 'jovian.steam.desktopSession' to 'gamescope-wayland'.
-              '';
-          };
+          type =
+            with types;
+            nullOr str
+            // {
+              check =
+                userProvidedDesktopSession:
+                lib.assertMsg
+                  (
+                    userProvidedDesktopSession != null
+                    -> (
+                      str.check userProvidedDesktopSession
+                      && lib.elem userProvidedDesktopSession config.services.displayManager.sessionData.sessionNames
+                    )
+                  )
+                  ''
+                    Desktop session '${userProvidedDesktopSession}' not found.
+                    Valid values for 'jovian.steam.desktopSession' are:
+                      ${lib.concatStringsSep "\n  " config.services.displayManager.sessionData.sessionNames}
+                    If you don't want a desktop session to switch to, set 'jovian.steam.desktopSession' to 'gamescope-wayland'.
+                  '';
+            };
           default = null;
           example = "plasma";
           description = ''
@@ -79,11 +96,14 @@ in
           ]
           # Add any globally defined well-known XKB_DEFAULT environment variables to the session
           # This is the closest wayland sessions have to generic keyboard configurations.
-          ++ (map (var:
-            (mkIf (config.environment.variables ? "${var}") {
-              "${var}" = mkDefault config.environment.variables."${var}";
-            })
-          ) [
+          ++ (map
+            (
+              var:
+              (mkIf (config.environment.variables ? "${var}") {
+                "${var}" = mkDefault config.environment.variables."${var}";
+              })
+            )
+            [
               "XKB_DEFAULT_LAYOUT"
               "XKB_DEFAULT_OPTIONS"
               "XKB_DEFAULT_MODEL"

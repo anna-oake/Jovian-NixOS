@@ -1,6 +1,6 @@
 { linux-firmware, fetchFromGitHub }:
 
-linux-firmware.overrideAttrs(_: rec {
+linux-firmware.overrideAttrs (_: rec {
   version = "20251210.1";
 
   src = fetchFromGitHub {
